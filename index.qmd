@@ -538,23 +538,8 @@ days_order = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 daily_data = {d: stats["daily_contributions"].get(d, 0) for d in days_order}
 max_daily = max(daily_data.values()) if daily_data.values() else 1
 
-time_periods = [
-    ("Night", "12am-6am", range(0, 6)),
-    ("Morning", "6am-12pm", range(6, 12)),
-    ("Afternoon", "12pm-6pm", range(12, 18)),
-    ("Evening", "6pm-12am", range(18, 24))
-]
-
-hourly_data = dict(stats["hourly_contributions"])
-time_data = {}
-for name, label, hours in time_periods:
-    time_data[name] = sum(hourly_data.get(h, 0) for h in hours)
-max_time = max(time_data.values()) if time_data.values() and max(time_data.values()) > 0 else 1
-
-# Determine peak coding time from the data
-peak_time_name = max(time_data, key=time_data.get) if any(time_data.values()) else None
-time_icons = {"Night": "🌙", "Morning": "☀️", "Afternoon": "🌤️", "Evening": "🌅"}
-time_titles = {"Night": "Night Owl", "Morning": "Early Bird", "Afternoon": "Afternoon Warrior", "Evening": "Evening Coder"}
+# Find peak day
+peak_day = max(daily_data, key=daily_data.get) if any(daily_data.values()) else None
 
 def get_heat_level(value, max_val):
     if max_val == 0 or value == 0:
@@ -573,8 +558,8 @@ def get_heat_level(value, max_val):
 
 heatmap_html = '''
 <h2 class="section-header">WHEN DO YOU CODE?</h2>
-<div class="heatmap-container">
-    <div class="heatmap">
+<div class="day-heatmap-wrapper">
+    <div class="heatmap single">
         <h3>Day of Week</h3>
         <div class="heatmap-grid">
 '''
@@ -582,29 +567,11 @@ heatmap_html = '''
 for day in days_order:
     value = daily_data[day]
     heat = get_heat_level(value, max_daily)
+    is_peak = " peak-day" if day == peak_day and value > 0 else ""
     heatmap_html += f'''
         <div class="heatmap-row">
             <div class="heatmap-label">{day}</div>
-            <div class="heatmap-cell heat-{heat}">{value}</div>
-        </div>
-    '''
-
-heatmap_html += '''
-        </div>
-    </div>
-    <div class="heatmap">
-        <h3>Time of Day</h3>
-        <div class="heatmap-grid">
-'''
-
-for name, label, hours in time_periods:
-    value = time_data[name]
-    heat = get_heat_level(value, max_time)
-    is_peak = " (peak)" if name == peak_time_name and value > 0 else ""
-    heatmap_html += f'''
-        <div class="heatmap-row">
-            <div class="heatmap-label">{name}</div>
-            <div class="heatmap-cell heat-{heat}">{value}{is_peak}</div>
+            <div class="heatmap-cell heat-{heat}{is_peak}">{value:,}</div>
         </div>
     '''
 
@@ -614,16 +581,8 @@ heatmap_html += '''
 </div>
 '''
 
-# Add prominent coding time badge
-if peak_time_name and time_data.get(peak_time_name, 0) > 0:
-    icon = time_icons.get(peak_time_name, "💻")
-    title = time_titles.get(peak_time_name, "Coder")
-    heatmap_html += f'''
-    <div class="coding-time-badge">
-        <span class="coding-time-icon">{icon}</span>
-        <span class="coding-time-title">You're a {title}</span>
-    </div>
-    '''
+if peak_day and daily_data.get(peak_day, 0) > 0:
+    heatmap_html += f'<p style="text-align: center; color: var(--gh-green-light); margin-top: 1rem; font-size: 1.1rem;">You code most on <strong>{peak_day}s</strong> with {daily_data[peak_day]:,} contributions!</p>'
 
 display(HTML(heatmap_html))
 ```

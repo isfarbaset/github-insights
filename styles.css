@@ -284,10 +284,11 @@ h1, h2, h3, h4, h5, h6, .display-heading {
 }
 
 .repo-progress {
-  height: 24px;
+  height: 28px;
   background: var(--gh-dark-tertiary);
   border-radius: 12px;
-  overflow: hidden;
+  overflow: visible;
+  position: relative;
 }
 
 .repo-progress-fill {
@@ -296,10 +297,13 @@ h1, h2, h3, h4, h5, h6, .display-heading {
   display: flex;
   align-items: center;
   padding-left: 12px;
+  padding-right: 12px;
   font-size: 0.8rem;
   font-weight: 600;
   color: #000;
   transition: width 1s ease;
+  min-width: fit-content;
+  white-space: nowrap;
 }
 
 .repo-progress-fill.gold { background: linear-gradient(90deg, var(--gold), #ffed4a); }
@@ -363,6 +367,12 @@ h1, h2, h3, h4, h5, h6, .display-heading {
   margin: 2rem 0;
 }
 
+.day-heatmap-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
 @media (max-width: 768px) {
   .heatmap-container {
     grid-template-columns: 1fr;
@@ -374,6 +384,16 @@ h1, h2, h3, h4, h5, h6, .display-heading {
   border-radius: 16px;
   border: 1px solid var(--gh-border);
   padding: 1.5rem;
+}
+
+.heatmap.single {
+  max-width: 400px;
+  width: 100%;
+}
+
+.heatmap.single .heatmap-cell.peak-day {
+  background: linear-gradient(135deg, var(--gh-green), var(--gh-blue));
+  box-shadow: 0 0 15px rgba(88, 166, 255, 0.4);
 }
 
 .heatmap h3 {

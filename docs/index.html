@@ -4093,10 +4093,11 @@ overflow: hidden;
 text-overflow: ellipsis;
 }
 .repo-progress {
-height: 24px;
+height: 28px;
 background: var(--gh-dark-tertiary);
 border-radius: 12px;
-overflow: hidden;
+overflow: visible;
+position: relative;
 }
 .repo-progress-fill {
 height: 100%;
@@ -4104,10 +4105,13 @@ border-radius: 12px;
 display: flex;
 align-items: center;
 padding-left: 12px;
+padding-right: 12px;
 font-size: 0.8rem;
 font-weight: 600;
 color: #000;
 transition: width 1s ease;
+min-width: fit-content;
+white-space: nowrap;
 }
 .repo-progress-fill.gold { background: linear-gradient(90deg, var(--gold), #ffed4a); }
 .repo-progress-fill.silver { background: linear-gradient(90deg, var(--silver), #e8e8e8); }
@@ -4162,6 +4166,11 @@ grid-template-columns: repeat(2, 1fr);
 gap: 2rem;
 margin: 2rem 0;
 }
+.day-heatmap-wrapper {
+display: flex;
+justify-content: center;
+margin: 2rem 0;
+}
 @media (max-width: 768px) {
 .heatmap-container {
 grid-template-columns: 1fr;
@@ -4172,6 +4181,14 @@ background: var(--gh-dark-secondary);
 border-radius: 16px;
 border: 1px solid var(--gh-border);
 padding: 1.5rem;
+}
+.heatmap.single {
+max-width: 400px;
+width: 100%;
+}
+.heatmap.single .heatmap-cell.peak-day {
+background: linear-gradient(135deg, var(--gh-green), var(--gh-blue));
+box-shadow: 0 0 15px rgba(88, 166, 255, 0.4);
 }
 .heatmap h3 {
 text-align: center;
@@ -4471,11 +4488,11 @@ font-size: 1.8rem;
 <h2 class="section-header anchored">YOUR YEAR IN CODE</h2>
 <div class="stats-grid">
     <div class="stat-card">
-        <div class="number">633</div>
+        <div class="number">635</div>
         <div class="label">Total Contributions</div>
     </div>
     <div class="stat-card blue">
-        <div class="number">298</div>
+        <div class="number">300</div>
         <div class="label">Commits</div>
     </div>
     <div class="stat-card purple">
@@ -4588,7 +4605,7 @@ font-size: 1.8rem;
         <div class="repo-bar-item">
             <div class="repo-rank blue">5</div>
             <div class="repo-info">
-                <div class="repo-name-bar">netflix-wrapped</div>
+                <div class="repo-name-bar">git-wrapped</div>
                 <div class="repo-progress">
                     <div class="repo-progress-fill blue" style="width: 4.712041884816754%;">
                         9 commits
@@ -4669,8 +4686,8 @@ font-size: 1.8rem;
     </div>
     
     <div class="month-bar">
-        <div class="value">72</div>
-        <div class="bar " style="height: 72.45283018867924px;"></div>
+        <div class="value">74</div>
+        <div class="bar " style="height: 74.46540880503144px;"></div>
         <div class="label">Dec</div>
     </div>
     </div><p style="text-align: center; color: var(--gh-blue); margin-top: 1rem;">Peak month: <strong>Oct</strong> with 159 contributions!</p>
@@ -4680,14 +4697,14 @@ font-size: 1.8rem;
 <div id="heatmaps" class="cell-output cell-output-display">
 
 <h2 class="section-header anchored">WHEN DO YOU CODE?</h2>
-<div class="heatmap-container">
-    <div class="heatmap">
+<div class="day-heatmap-wrapper">
+    <div class="heatmap single">
         <h3 class="anchored">Day of Week</h3>
         <div class="heatmap-grid">
 
         <div class="heatmap-row">
             <div class="heatmap-label">Mon</div>
-            <div class="heatmap-cell heat-5">131</div>
+            <div class="heatmap-cell heat-5 peak-day">131</div>
         </div>
     
         <div class="heatmap-row">
@@ -4702,7 +4719,7 @@ font-size: 1.8rem;
     
         <div class="heatmap-row">
             <div class="heatmap-label">Thu</div>
-            <div class="heatmap-cell heat-4">84</div>
+            <div class="heatmap-cell heat-4">86</div>
         </div>
     
         <div class="heatmap-row">
@@ -4722,39 +4739,8 @@ font-size: 1.8rem;
     
         </div>
     </div>
-    <div class="heatmap">
-        <h3 class="anchored">Time of Day</h3>
-        <div class="heatmap-grid">
-
-        <div class="heatmap-row">
-            <div class="heatmap-label">Night</div>
-            <div class="heatmap-cell heat-5">1 (peak)</div>
-        </div>
-    
-        <div class="heatmap-row">
-            <div class="heatmap-label">Morning</div>
-            <div class="heatmap-cell heat-0">0</div>
-        </div>
-    
-        <div class="heatmap-row">
-            <div class="heatmap-label">Afternoon</div>
-            <div class="heatmap-cell heat-0">0</div>
-        </div>
-    
-        <div class="heatmap-row">
-            <div class="heatmap-label">Evening</div>
-            <div class="heatmap-cell heat-5">1</div>
-        </div>
-    
-        </div>
-    </div>
 </div>
-
-    <div class="coding-time-badge">
-        <span class="coding-time-icon">🌙</span>
-        <span class="coding-time-title">You&#39;re a Night Owl</span>
-    </div>
-    
+<p style="text-align: center; color: var(--gh-green-light); margin-top: 1rem; font-size: 1.1rem;">You code most on <strong>Mons</strong> with 131 contributions!</p>
 </div>
 </div>
 <div id="cell-languages" class="cell" data-execution_count="10">
@@ -4763,31 +4749,31 @@ font-size: 1.8rem;
             <div class="language-item">
                 <div class="language-dot" style="background: #DA5B0B;"></div>
                 <span class="language-name">Jupyter Notebook</span>
-                <span class="language-percent">73.5%</span>
+                <span class="language-percent">72.9%</span>
             </div>
             
             <div class="language-item">
                 <div class="language-dot" style="background: #663399;"></div>
                 <span class="language-name">CSS</span>
-                <span class="language-percent">17.4%</span>
+                <span class="language-percent">14.7%</span>
             </div>
             
             <div class="language-item">
                 <div class="language-dot" style="background: #e34c26;"></div>
                 <span class="language-name">HTML</span>
-                <span class="language-percent">7.2%</span>
+                <span class="language-percent">7.1%</span>
+            </div>
+            
+            <div class="language-item">
+                <div class="language-dot" style="background: #3572A5;"></div>
+                <span class="language-name">Python</span>
+                <span class="language-percent">3.8%</span>
             </div>
             
             <div class="language-item">
                 <div class="language-dot" style="background: #f1e05a;"></div>
                 <span class="language-name">JavaScript</span>
                 <span class="language-percent">1.5%</span>
-            </div>
-            
-            <div class="language-item">
-                <div class="language-dot" style="background: #3572A5;"></div>
-                <span class="language-name">Python</span>
-                <span class="language-percent">0.4%</span>
             </div>
             </div>
 </div>
@@ -4798,7 +4784,7 @@ font-size: 1.8rem;
 <h2 class="section-header anchored">FUN FACTS</h2>
 <div class="fun-facts">
     <div class="fun-fact">
-        You mass-murdered approximately <span class="highlight">934</span> bugs this year
+        You mass-murdered approximately <span class="highlight">940</span> bugs this year
     </div>
     <div class="fun-fact">
         Your repositories collected <span class="highlight">6</span> stars
@@ -4807,10 +4793,10 @@ font-size: 1.8rem;
         Your code was forked <span class="highlight">2</span> times
     </div>
     <div class="fun-fact">
-        You wrote approximately <span class="highlight">14,900</span> lines of code
+        You wrote approximately <span class="highlight">15,000</span> lines of code
     </div>
     <div class="fun-fact">
-        That&#39;s about <span class="highlight">596</span> cups of coffee worth of coding
+        That&#39;s about <span class="highlight">600</span> cups of coffee worth of coding
     </div>
 </div>
 </div>
