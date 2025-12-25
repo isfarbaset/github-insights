@@ -2,6 +2,8 @@
 
 A Spotify Wrapped-style year-in-review for your GitHub activity. See your coding stats, streaks, top repositories, and more in a beautiful dark-themed visualization.
 
+**Live Demo:** https://isfarbaset.github.io/git-wrapped/
+
 ## Features
 
 - **Stats Overview**: Total commits, PRs, issues, and repositories contributed to
