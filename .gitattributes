@@ -1,0 +1,6 @@
+# Mark generated docs as linguist-generated so they don't count toward language stats
+docs/** linguist-generated=true
+
+# Mark the actual source files correctly
+*.qmd linguist-language=Python
+*.css linguist-vendored=false
