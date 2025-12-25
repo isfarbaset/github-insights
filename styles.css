@@ -313,8 +313,8 @@ h1, h2, h3, h4, h5, h6, .display-heading {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  height: 250px;
-  padding: 2rem;
+  height: 280px;
+  padding: 2.5rem 2rem 2rem;
   background: var(--gh-dark-secondary);
   border-radius: 16px;
   border: 1px solid var(--gh-border);

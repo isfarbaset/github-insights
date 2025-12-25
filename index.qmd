@@ -250,6 +250,18 @@ def calculate_stats(username, repos, events, graphql_data):
         
         stats["total_prs_merged"] = (graphql_data.get("pullRequests") or {}).get("totalCount", 0)
         stats["total_issues_closed"] = (graphql_data.get("issues") or {}).get("totalCount", 0)
+        
+        # Process events for hourly data (GraphQL doesn't provide this)
+        for event in events:
+            event_date = datetime.strptime(event["created_at"], "%Y-%m-%dT%H:%M:%SZ")
+            if event_date.year != YEAR:
+                continue
+            hour = event_date.hour
+            if event["type"] == "PushEvent":
+                commits = len(event.get("payload", {}).get("commits", []))
+                stats["hourly_contributions"][hour] += commits
+            elif event["type"] in ["PullRequestEvent", "IssuesEvent", "CreateEvent"]:
+                stats["hourly_contributions"][hour] += 1
     
     else:
         # Fallback to REST API data
@@ -502,7 +514,7 @@ chart_html = '<h2 class="section-header">MONTHLY CONTRIBUTIONS</h2><div class="m
 
 for month in months_order:
     value = monthly_data[month]
-    height = (value / max_monthly) * 180 if max_monthly > 0 else 0
+    height = (value / max_monthly) * 160 if max_monthly > 0 else 0
     is_peak = "peak" if month == peak_month and value > 0 else ""
     
     chart_html += f'''
