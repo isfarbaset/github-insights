@@ -221,15 +221,19 @@ def calculate_stats(username, repos, events, graphql_data):
             longest_streak = 0
             temp_streak = 0
             
-            for day in all_days:
+            # Filter to only include days up to today
+            today = datetime.now().strftime("%Y-%m-%d")
+            valid_days = [d for d in all_days if d["date"] <= today]
+            
+            for day in valid_days:
                 if day["count"] > 0:
                     temp_streak += 1
                     longest_streak = max(longest_streak, temp_streak)
                 else:
                     temp_streak = 0
             
-            # Current streak (from end)
-            for day in reversed(all_days):
+            # Current streak (from today backwards)
+            for day in reversed(valid_days):
                 if day["count"] > 0:
                     current_streak += 1
                 else:
