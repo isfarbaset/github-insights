@@ -539,17 +539,22 @@ daily_data = {d: stats["daily_contributions"].get(d, 0) for d in days_order}
 max_daily = max(daily_data.values()) if daily_data.values() else 1
 
 time_periods = [
-    ("12am-6am", range(0, 6)),
-    ("6am-12pm", range(6, 12)),
-    ("12pm-6pm", range(12, 18)),
-    ("6pm-12am", range(18, 24))
+    ("Night", "12am-6am", range(0, 6)),
+    ("Morning", "6am-12pm", range(6, 12)),
+    ("Afternoon", "12pm-6pm", range(12, 18)),
+    ("Evening", "6pm-12am", range(18, 24))
 ]
 
 hourly_data = dict(stats["hourly_contributions"])
 time_data = {}
-for label, hours in time_periods:
-    time_data[label] = sum(hourly_data.get(h, 0) for h in hours)
-max_time = max(time_data.values()) if time_data.values() else 1
+for name, label, hours in time_periods:
+    time_data[name] = sum(hourly_data.get(h, 0) for h in hours)
+max_time = max(time_data.values()) if time_data.values() and max(time_data.values()) > 0 else 1
+
+# Determine peak coding time from the data
+peak_time_name = max(time_data, key=time_data.get) if any(time_data.values()) else None
+time_icons = {"Night": "🌙", "Morning": "☀️", "Afternoon": "🌤️", "Evening": "🌅"}
+time_titles = {"Night": "Night Owl", "Morning": "Early Bird", "Afternoon": "Afternoon Warrior", "Evening": "Evening Coder"}
 
 def get_heat_level(value, max_val):
     if max_val == 0 or value == 0:
@@ -592,13 +597,14 @@ heatmap_html += '''
         <div class="heatmap-grid">
 '''
 
-for label in ["12am-6am", "6am-12pm", "12pm-6pm", "6pm-12am"]:
-    value = time_data[label]
+for name, label, hours in time_periods:
+    value = time_data[name]
     heat = get_heat_level(value, max_time)
+    is_peak = " (peak)" if name == peak_time_name and value > 0 else ""
     heatmap_html += f'''
         <div class="heatmap-row">
-            <div class="heatmap-label">{label}</div>
-            <div class="heatmap-cell heat-{heat}">{value}</div>
+            <div class="heatmap-label">{name}</div>
+            <div class="heatmap-cell heat-{heat}">{value}{is_peak}</div>
         </div>
     '''
 
@@ -608,8 +614,16 @@ heatmap_html += '''
 </div>
 '''
 
-if coding_time != "Unknown":
-    heatmap_html += f'<p style="text-align: center; color: var(--gh-purple); margin-top: 1rem; font-size: 1.2rem;">You\'re a <strong>{coding_time}</strong></p>'
+# Add prominent coding time badge
+if peak_time_name and time_data.get(peak_time_name, 0) > 0:
+    icon = time_icons.get(peak_time_name, "💻")
+    title = time_titles.get(peak_time_name, "Coder")
+    heatmap_html += f'''
+    <div class="coding-time-badge">
+        <span class="coding-time-icon">{icon}</span>
+        <span class="coding-time-title">You're a {title}</span>
+    </div>
+    '''
 
 display(HTML(heatmap_html))
 ```

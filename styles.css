@@ -425,6 +425,32 @@ h1, h2, h3, h4, h5, h6, .display-heading {
 .heat-4 { background: var(--gh-green); color: #fff; }
 .heat-5 { background: var(--gh-green-light); color: #000; }
 
+/* Coding Time Badge */
+.coding-time-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem auto;
+  padding: 1.5rem 3rem;
+  background: linear-gradient(135deg, var(--gh-dark-secondary), var(--gh-dark-tertiary));
+  border: 2px solid var(--gh-purple);
+  border-radius: 50px;
+  max-width: 400px;
+  box-shadow: 0 0 30px rgba(163, 113, 247, 0.3);
+}
+
+.coding-time-icon {
+  font-size: 2.5rem;
+}
+
+.coding-time-title {
+  font-size: 1.5rem;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 2px;
+  color: var(--gh-purple);
+}
+
 /* Languages */
 .languages-chart {
   display: flex;
