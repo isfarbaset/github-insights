@@ -436,12 +436,40 @@ icon_map = {
 }
 emoji = icon_map.get(icon_type, "💻")
 
+# Determine coding time personality
+time_periods = [
+    ("Night", range(0, 6)),
+    ("Morning", range(6, 12)),
+    ("Afternoon", range(12, 18)),
+    ("Evening", range(18, 24))
+]
+hourly_data = dict(stats["hourly_contributions"])
+time_data = {name: sum(hourly_data.get(h, 0) for h in hours) for name, hours in time_periods}
+peak_time = max(time_data, key=time_data.get) if any(time_data.values()) else "Night"
+
+time_reveals = {
+    "Night": {"title": "NIGHT OWL", "subtitle": "The moon is your coding companion", "emoji": "🦉"},
+    "Morning": {"title": "EARLY BIRD", "subtitle": "First commits before first coffee", "emoji": "🌅"},
+    "Afternoon": {"title": "AFTERNOON WARRIOR", "subtitle": "Peak productivity hours", "emoji": "☀️"},
+    "Evening": {"title": "EVENING CODER", "subtitle": "Golden hour, golden commits", "emoji": "🌆"}
+}
+reveal = time_reveals.get(peak_time, time_reveals["Night"])
+
 personality_html = f'''
 <h2 class="section-header">YOUR DEVELOPER PERSONALITY</h2>
-<div class="personality-badge">
-    <div class="emoji">{emoji}</div>
-    <div class="title">{title}</div>
-    <div class="description">{description}</div>
+<div class="personality-duo">
+    <div class="personality-card">
+        <div class="card-label">Coding Style</div>
+        <div class="card-emoji">{emoji}</div>
+        <div class="card-title">{title}</div>
+        <div class="card-subtitle">{description}</div>
+    </div>
+    <div class="personality-card time-card">
+        <div class="card-label">You're a...</div>
+        <div class="card-emoji">{reveal["emoji"]}</div>
+        <div class="card-title">{reveal["title"]}</div>
+        <div class="card-subtitle">{reveal["subtitle"]}</div>
+    </div>
 </div>
 '''
 display(HTML(personality_html))
@@ -541,46 +569,6 @@ max_daily = max(daily_data.values()) if daily_data.values() else 1
 # Find peak day
 peak_day = max(daily_data, key=daily_data.get) if any(daily_data.values()) else None
 
-# Determine coding time personality from events data
-time_periods = [
-    ("Night", range(0, 6)),
-    ("Morning", range(6, 12)),
-    ("Afternoon", range(12, 18)),
-    ("Evening", range(18, 24))
-]
-hourly_data = dict(stats["hourly_contributions"])
-time_data = {name: sum(hourly_data.get(h, 0) for h in hours) for name, hours in time_periods}
-peak_time = max(time_data, key=time_data.get) if any(time_data.values()) else "Night"
-
-time_reveals = {
-    "Night": {
-        "title": "NIGHT OWL",
-        "subtitle": "The moon is your coding companion",
-        "desc": "While the world sleeps, you're shipping features. Your best work happens when the stars come out.",
-        "emoji": "🦉"
-    },
-    "Morning": {
-        "title": "EARLY BIRD", 
-        "subtitle": "First commits before first coffee",
-        "desc": "You catch the worm and the merge conflicts. Dawn is your domain, and your code is crispier than morning toast.",
-        "emoji": "🌅"
-    },
-    "Afternoon": {
-        "title": "AFTERNOON WARRIOR",
-        "subtitle": "Peak productivity hours",
-        "desc": "Post-lunch power moves. When others hit the afternoon slump, you hit your stride.",
-        "emoji": "☀️"
-    },
-    "Evening": {
-        "title": "EVENING CODER",
-        "subtitle": "Golden hour, golden commits",
-        "desc": "As the day winds down, your keyboard heats up. Sunset sessions are where your magic happens.",
-        "emoji": "🌆"
-    }
-}
-
-reveal = time_reveals.get(peak_time, time_reveals["Night"])
-
 def get_heat_level(value, max_val):
     if max_val == 0 or value == 0:
         return 0
@@ -623,17 +611,6 @@ heatmap_html += '''
 
 if peak_day and daily_data.get(peak_day, 0) > 0:
     heatmap_html += f'<p style="text-align: center; color: var(--gh-green-light); margin-top: 1rem; font-size: 1.1rem;">You code most on <strong>{peak_day}s</strong> with {daily_data[peak_day]:,} contributions!</p>'
-
-# Add dramatic reveal card
-heatmap_html += f'''
-<div class="time-reveal-card">
-    <div class="reveal-label">You're a...</div>
-    <div class="reveal-emoji">{reveal["emoji"]}</div>
-    <div class="reveal-title">{reveal["title"]}</div>
-    <div class="reveal-subtitle">{reveal["subtitle"]}</div>
-    <div class="reveal-desc">{reveal["desc"]}</div>
-</div>
-'''
 
 display(HTML(heatmap_html))
 ```

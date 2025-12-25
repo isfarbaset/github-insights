@@ -3982,6 +3982,86 @@ margin: 1rem auto 0;
 border-radius: 2px;
 }
 
+.personality-duo {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 2rem;
+margin: 3rem auto;
+max-width: 900px;
+}
+@media (max-width: 768px) {
+.personality-duo {
+grid-template-columns: 1fr;
+}
+}
+.personality-card {
+background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+border: 2px solid var(--gh-green);
+border-radius: 24px;
+padding: 2.5rem 2rem;
+text-align: center;
+position: relative;
+overflow: hidden;
+box-shadow: 0 0 40px rgba(35, 134, 54, 0.15),
+inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.personality-card.time-card {
+border-color: var(--gh-purple);
+box-shadow: 0 0 40px rgba(163, 113, 247, 0.15),
+inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.personality-card::before {
+content: '';
+position: absolute;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background: radial-gradient(circle, rgba(35, 134, 54, 0.08) 0%, transparent 50%);
+animation: pulse-glow 4s ease-in-out infinite;
+}
+.personality-card.time-card::before {
+background: radial-gradient(circle, rgba(163, 113, 247, 0.08) 0%, transparent 50%);
+}
+.card-label {
+font-size: 0.85rem;
+color: var(--gh-text-muted);
+text-transform: uppercase;
+letter-spacing: 3px;
+margin-bottom: 1rem;
+position: relative;
+}
+.card-emoji {
+font-size: 4rem;
+margin: 0.5rem 0;
+position: relative;
+animation: float 3s ease-in-out infinite;
+}
+.card-title {
+font-family: 'Bebas Neue', sans-serif;
+font-size: 2.2rem;
+letter-spacing: 4px;
+background: linear-gradient(135deg, var(--gh-green), var(--gh-green-light));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+margin: 0.5rem 0;
+position: relative;
+}
+.personality-card.time-card .card-title {
+background: linear-gradient(135deg, var(--gh-purple), var(--gh-blue));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.card-subtitle {
+font-size: 1rem;
+color: var(--gh-text-muted);
+font-style: italic;
+margin-top: 0.5rem;
+position: relative;
+}
+
 .personality-badge {
 background: linear-gradient(135deg, var(--gh-dark-secondary), var(--gh-dark-tertiary));
 border: 2px solid var(--gh-green);
@@ -4561,11 +4641,11 @@ font-size: 1.8rem;
 <h2 class="section-header anchored">YOUR YEAR IN CODE</h2>
 <div class="stats-grid">
     <div class="stat-card">
-        <div class="number">636</div>
+        <div class="number">637</div>
         <div class="label">Total Contributions</div>
     </div>
     <div class="stat-card blue">
-        <div class="number">301</div>
+        <div class="number">302</div>
         <div class="label">Commits</div>
     </div>
     <div class="stat-card purple">
@@ -4600,10 +4680,19 @@ font-size: 1.8rem;
 <div id="personality" class="cell-output cell-output-display">
 
 <h2 class="section-header anchored">YOUR DEVELOPER PERSONALITY</h2>
-<div class="personality-badge">
-    <div class="emoji">🔥</div>
-    <div class="title">STREAK MASTER</div>
-    <div class="description">Consistency is your middle name!</div>
+<div class="personality-duo">
+    <div class="personality-card">
+        <div class="card-label">Coding Style</div>
+        <div class="card-emoji">🔥</div>
+        <div class="card-title">STREAK MASTER</div>
+        <div class="card-subtitle">Consistency is your middle name!</div>
+    </div>
+    <div class="personality-card time-card">
+        <div class="card-label">You&#39;re a...</div>
+        <div class="card-emoji">🦉</div>
+        <div class="card-title">NIGHT OWL</div>
+        <div class="card-subtitle">The moon is your coding companion</div>
+    </div>
 </div>
 </div>
 </div>
@@ -4666,7 +4755,7 @@ font-size: 1.8rem;
         <div class="repo-bar-item">
             <div class="repo-rank green">4</div>
             <div class="repo-info">
-                <div class="repo-name-bar">5900-HW3</div>
+                <div class="repo-name-bar">git-wrapped</div>
                 <div class="repo-progress">
                     <div class="repo-progress-fill green" style="width: 5.7591623036649215%;">
                         11 commits
@@ -4678,10 +4767,10 @@ font-size: 1.8rem;
         <div class="repo-bar-item">
             <div class="repo-rank blue">5</div>
             <div class="repo-info">
-                <div class="repo-name-bar">git-wrapped</div>
+                <div class="repo-name-bar">5900-HW3</div>
                 <div class="repo-progress">
-                    <div class="repo-progress-fill blue" style="width: 5.2356020942408374%;">
-                        10 commits
+                    <div class="repo-progress-fill blue" style="width: 5.7591623036649215%;">
+                        11 commits
                     </div>
                 </div>
             </div>
@@ -4759,8 +4848,8 @@ font-size: 1.8rem;
     </div>
     
     <div class="month-bar">
-        <div class="value">75</div>
-        <div class="bar " style="height: 75.47169811320755px;"></div>
+        <div class="value">76</div>
+        <div class="bar " style="height: 76.47798742138365px;"></div>
         <div class="label">Dec</div>
     </div>
     </div><p style="text-align: center; color: var(--gh-blue); margin-top: 1rem;">Peak month: <strong>Oct</strong> with 159 contributions!</p>
@@ -4792,7 +4881,7 @@ font-size: 1.8rem;
     
         <div class="heatmap-row">
             <div class="heatmap-label">Thu</div>
-            <div class="heatmap-cell heat-4">87</div>
+            <div class="heatmap-cell heat-4">88</div>
         </div>
     
         <div class="heatmap-row">
@@ -4814,13 +4903,6 @@ font-size: 1.8rem;
     </div>
 </div>
 <p style="text-align: center; color: var(--gh-green-light); margin-top: 1rem; font-size: 1.1rem;">You code most on <strong>Mons</strong> with 131 contributions!</p>
-<div class="time-reveal-card">
-    <div class="reveal-label">You&#39;re a...</div>
-    <div class="reveal-emoji">🦉</div>
-    <div class="reveal-title">NIGHT OWL</div>
-    <div class="reveal-subtitle">The moon is your coding companion</div>
-    <div class="reveal-desc">While the world sleeps, you&#39;re shipping features. Your best work happens when the stars come out.</div>
-</div>
 </div>
 </div>
 <div id="cell-languages" class="cell" data-execution_count="10">
@@ -4829,7 +4911,7 @@ font-size: 1.8rem;
             <div class="language-item">
                 <div class="language-dot" style="background: #DA5B0B;"></div>
                 <span class="language-name">Jupyter Notebook</span>
-                <span class="language-percent">72.7%</span>
+                <span class="language-percent">72.4%</span>
             </div>
             
             <div class="language-item">
@@ -4847,7 +4929,7 @@ font-size: 1.8rem;
             <div class="language-item">
                 <div class="language-dot" style="background: #3572A5;"></div>
                 <span class="language-name">Python</span>
-                <span class="language-percent">4.1%</span>
+                <span class="language-percent">4.5%</span>
             </div>
             
             <div class="language-item">
@@ -4864,7 +4946,7 @@ font-size: 1.8rem;
 <h2 class="section-header anchored">FUN FACTS</h2>
 <div class="fun-facts">
     <div class="fun-fact">
-        You mass-murdered approximately <span class="highlight">943</span> bugs this year
+        You mass-murdered approximately <span class="highlight">946</span> bugs this year
     </div>
     <div class="fun-fact">
         Your repositories collected <span class="highlight">6</span> stars
@@ -4873,10 +4955,10 @@ font-size: 1.8rem;
         Your code was forked <span class="highlight">2</span> times
     </div>
     <div class="fun-fact">
-        You wrote approximately <span class="highlight">15,050</span> lines of code
+        You wrote approximately <span class="highlight">15,100</span> lines of code
     </div>
     <div class="fun-fact">
-        That&#39;s about <span class="highlight">602</span> cups of coffee worth of coding
+        That&#39;s about <span class="highlight">604</span> cups of coffee worth of coding
     </div>
 </div>
 </div>
