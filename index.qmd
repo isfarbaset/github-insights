@@ -671,7 +671,7 @@ fun_facts_html = f'''
 <h2 class="section-header">FUN FACTS</h2>
 <div class="fun-facts">
     <div class="fun-fact">
-        You mass-murdered approximately <span class="highlight">{bugs_squashed:,}</span> bugs this year
+        You squashed approximately <span class="highlight">{bugs_squashed:,}</span> bugs this year
     </div>
     <div class="fun-fact">
         Your repositories collected <span class="highlight">{stats["stars_received"]:,}</span> stars
