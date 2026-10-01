@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════
    GitHub Insights — Full Stats Card Generator
    Uses the public GitHub REST, Search & Contributors APIs
-   (no token needed) for lifetime stats.
+   (no sign-in needed) for lifetime stats.
    Events API used for activity-pattern visualizations.
    ═══════════════════════════════════════════════════════════ */
 
@@ -32,40 +32,16 @@ const downloadBtn = $("#download-btn");
 const cardActions = $("#card-actions");
 const placeholder = $("#card-placeholder");
 const cardWrapper = $("#card-wrapper");
-const tokenInput  = $("#token-input");
-const tokenToggle = $("#token-toggle");
-const tokenArea   = $("#token-area");
 
-/* ── Token management ──────────────────────────────────── */
+/* ── Requests ──────────────────────────────────────────── */
 
-function getToken() {
-  return tokenInput.value.trim() || localStorage.getItem("gh_token") || "";
-}
-
+// Every call is unauthenticated: this page never asks for a GitHub token.
 function getHeaders() {
-  const h = { Accept: "application/vnd.github.v3+json" };
-  const token = getToken();
-  if (token) h.Authorization = `token ${token}`;
-  return h;
+  return { Accept: "application/vnd.github.v3+json" };
 }
 
-// Persist token to localStorage when changed
-tokenInput.addEventListener("change", () => {
-  const t = tokenInput.value.trim();
-  if (t) localStorage.setItem("gh_token", t);
-  else localStorage.removeItem("gh_token");
-});
-
-// Restore saved token
-if (localStorage.getItem("gh_token")) {
-  tokenInput.value = localStorage.getItem("gh_token");
-}
-
-// Toggle token area visibility
-tokenToggle.addEventListener("click", () => {
-  tokenArea.hidden = !tokenArea.hidden;
-  if (!tokenArea.hidden) tokenInput.focus();
-});
+// Forget any token an earlier version of this page saved in the browser
+localStorage.removeItem("gh_token");
 
 /* ── Caching (localStorage, 1-hour TTL) ────────────────── */
 
@@ -149,10 +125,7 @@ async function fetchJSONStrict(url) {
   if (!res.ok) {
     if (res.status === 404) throw new Error("User not found");
     if (res.status === 403 || res.status === 429) {
-      const token = getToken();
-      throw new Error(token
-        ? "API rate limit exceeded even with token — try again shortly"
-        : "API rate limit exceeded — add a GitHub token below to fix this");
+      throw new Error("GitHub's hourly limit for this page has been reached. Try again in an hour.");
     }
     throw new Error(`GitHub API error (${res.status})`);
   }
@@ -203,7 +176,7 @@ async function fetchAllRepos(username) {
 
 async function fetchEvents(username) {
   let events = [], firstPage = true;
-  const maxPages = getToken() ? 10 : 1;
+  const maxPages = 1;
   for (let page = 1; page <= maxPages; page++) {
     try {
       const batch = await fetchJSON(
@@ -253,7 +226,7 @@ async function fetchLifetimeData(username, repos) {
 
   // Search API — lifetime PR & Issue counts
   // The Search API has its own rate limit (10 req/min unauthenticated)
-  // separate from the core REST API, so this is safe without a token
+  // separate from the core REST API, so this is safe unauthenticated
   try {
     const [prRes, prMergedRes, issueRes, issueClosedRes] = await Promise.all([
       fetchJSON(`${API}/search/issues?q=author:${username}+type:pr+is:public&per_page=1`).catch(() => null),
@@ -270,7 +243,7 @@ async function fetchLifetimeData(username, repos) {
   // Stats/Contributors API — lifetime commit totals + weekly history
   // This endpoint returns weekly commit data spanning each repo's full lifetime
   const allOwned = repos.filter(r => !r.fork);
-  const repoLimit = getToken() ? 50 : 5;
+  const repoLimit = 5;
   const owned = allOwned
     .sort((a, b) => new Date(b.pushed_at || 0) - new Date(a.pushed_at || 0))
     .slice(0, repoLimit);
@@ -826,17 +799,17 @@ form.addEventListener("submit", async (e) => {
 
     // 2. Pre-check rate limit (free call)
     const rateLimit = await checkRateLimit();
-    if (rateLimit && rateLimit.remaining < 3 && !getToken()) {
+    if (rateLimit && rateLimit.remaining < 3) {
       // Not enough calls left — fetch only the free contribution calendar
       const dailyContribs = await fetchDailyContributions(username);
       if (!dailyContribs) {
-        showError("API rate limit exceeded — add a GitHub token below, or wait an hour.");
+        showError("GitHub's hourly limit for this page has been reached. Try again in an hour.");
         return;
       }
       // Build a minimal card from the contribution calendar only
       const userRes = await fetch(`${API}/users/${username}`, { headers: getHeaders() });
       if (!userRes.ok) {
-        showError("API rate limit exceeded — add a GitHub token below, or wait an hour.");
+        showError("GitHub's hourly limit for this page has been reached. Try again in an hour.");
         return;
       }
       const user = await userRes.json();
@@ -847,7 +820,7 @@ form.addEventListener("submit", async (e) => {
       placeholder.hidden = true;
       cardWrapper.hidden = false;
       cardActions.hidden = false;
-      showToast("⚠️ Rate limited — showing partial data. Add a token for full stats.");
+      showToast("⚠️ Rate limited — showing partial data. Try again in an hour for full stats.");
       return;
     }
 
@@ -874,7 +847,7 @@ form.addEventListener("submit", async (e) => {
     cardActions.hidden = false;
 
     if (stats._partial) {
-      showToast("⚠️ Some data unavailable due to rate limits. Add a token for full stats.");
+      showToast("⚠️ Some data unavailable due to rate limits. Try again in an hour for full stats.");
     }
   } catch (err) {
     showError(err.message || "Something went wrong. Please try again.");

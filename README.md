@@ -20,11 +20,7 @@ Generate your own GitHub stats card. Enter a username, get a downloadable PNG yo
 
 ## Rate Limits
 
-GitHub allows 60 API requests per hour without a token. If you hit the limit, click "Add GitHub token" on the page and paste a personal access token to get 5,000 requests per hour.
-
-You can create a token here: [github.com/settings/tokens](https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=GitHub+Insights)
-
-Your token is stored in your browser's local storage only. It is never sent anywhere other than GitHub's API.
+The page talks to GitHub's public API without signing in, which allows 60 requests per hour per visitor. If you hit the limit, the card shows what it can and the rest comes back within the hour. The page never asks for a GitHub token or any other credential.
 
 ## Run Locally
 

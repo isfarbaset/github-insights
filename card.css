@@ -219,69 +219,6 @@ body {
   display: none;
 }
 
-/* Token section */
-
-.token-section {
-  width: 100%;
-  margin-top: 1rem;
-}
-
-.token-toggle {
-  background: none;
-  border: none;
-  color: var(--gh-text-muted);
-  font-family: inherit;
-  font-size: .8rem;
-  cursor: pointer;
-  padding: .35rem 0;
-  transition: color .2s;
-}
-
-.token-toggle:hover { color: var(--gh-text); }
-
-.token-hint {
-  opacity: .6;
-  font-size: .75rem;
-}
-
-.token-area {
-  margin-top: .5rem;
-}
-
-.token-area[hidden] { display: none; }
-
-.token-input {
-  width: 100%;
-  background: var(--gh-dark);
-  border: 1px solid var(--gh-border);
-  border-radius: 8px;
-  padding: .6rem .85rem;
-  color: var(--gh-text);
-  font-family: 'Inter', monospace;
-  font-size: .85rem;
-  outline: none;
-  transition: border-color .2s;
-}
-
-.token-input:focus {
-  border-color: var(--gh-green);
-  box-shadow: 0 0 0 3px rgba(35, 134, 54, .12);
-}
-
-.token-note {
-  font-size: .7rem;
-  color: var(--gh-text-muted);
-  margin-top: .35rem;
-  opacity: .7;
-}
-
-.token-note a {
-  color: var(--gh-blue);
-  text-decoration: none;
-}
-
-.token-note a:hover { text-decoration: underline; }
-
 /* Actions below the form */
 
 .card-actions {
