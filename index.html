@@ -3,264 +3,217 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Commit Card — a stats card for any public GitHub profile</title>
-  <meta name="description" content="Commit Card, a side project by Isfar Baset: type a public GitHub username and get a shareable stats card with streaks, top languages and more. Not affiliated with GitHub." />
+  <title>Commit Card · by Isfar Baset</title>
+  <meta name="description" content="Commit Card, a side project by Isfar Baset: type a public GitHub username and get your year of code printed as a little receipt. Not affiliated with GitHub." />
+  <meta name="theme-color" content="#f4efe6" />
 
   <!-- Open Graph (LinkedIn, Facebook, iMessage, Slack, etc.) -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Commit Card by Isfar Baset" />
-  <meta property="og:description" content="A side project by Isfar Baset: turn any public GitHub profile into a shareable stats card. Not affiliated with GitHub." />
+  <meta property="og:title" content="Commit Card · by Isfar Baset" />
+  <meta property="og:description" content="Your year of code, printed as a little receipt. A side project by Isfar Baset. Not affiliated with GitHub." />
   <meta property="og:image" content="https://isfarbaset.github.io/github-insights/preview.png" />
-  <meta property="og:url" content="https://isfarbaset.github.io/github-insights" />
+  <meta property="og:url" content="https://isfarbaset.github.io/github-insights/" />
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Commit Card by Isfar Baset" />
-  <meta name="twitter:description" content="A side project by Isfar Baset: turn any public GitHub profile into a shareable stats card. Not affiliated with GitHub." />
+  <meta name="twitter:title" content="Commit Card · by Isfar Baset" />
+  <meta name="twitter:description" content="Your year of code, printed as a little receipt. A side project by Isfar Baset. Not affiliated with GitHub." />
   <meta name="twitter:image" content="https://isfarbaset.github.io/github-insights/preview.png" />
 
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='7' y='3' width='18' height='26' rx='2' fill='%23fbf8f2' stroke='%23231d19' stroke-width='2'/%3E%3Cpath d='M11 10h10M11 15h10M11 20h6' stroke='%238b3a2b' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Nothing+You+Could+Do&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="card.css" />
 </head>
 <body>
-  <div class="page-layout">
+  <div class="page">
 
-    <!-- ═══ LEFT PANEL — branding + input ═══ -->
-    <aside class="panel-left">
-      <div class="panel-left-inner">
-        <div class="landing-glow"></div>
-        <div class="logo-mark" aria-hidden="true">
-          <span class="logo-card logo-card-back"></span>
-          <span class="logo-card logo-card-front">
-            <span class="logo-bar"></span><span class="logo-bar"></span><span class="logo-bar"></span>
-          </span>
-        </div>
-        <p class="landing-kicker">A side project by Isfar Baset</p>
-        <h1 class="landing-title">Commit Card</h1>
-        <p class="landing-sub">Type any public GitHub username and get a shareable card of streaks, top repos and languages.</p>
+    <!-- ═══ Left: the counter ═══ -->
+    <header class="counter">
+      <div class="counter-inner">
+        <p class="kicker"><a href="https://isfarbaset.github.io/portfolio/">Isfar's</a> <span>·</span> a side project</p>
 
-        <form id="username-form" class="input-group" autocomplete="off">
-          <span class="input-at">@</span>
-          <input
-            id="username-input"
-            type="text"
-            placeholder="username"
-            aria-label="GitHub username"
-            required
-            spellcheck="false"
-            autocomplete="off"
-          />
-          <button type="submit" id="generate-btn">
-            <span class="btn-text">Make card</span>
-            <span class="btn-loader" hidden>
-              <span class="spinner"></span>
-            </span>
-          </button>
+        <h1 class="title">Commit <em>Card</em></h1>
+        <p class="hand title-note">your year of code, printed to go</p>
+
+        <p class="lede">
+          Type in any public GitHub username and I'll ring up a little receipt:
+          streaks, top repos, favorite languages, and the hour you do your best work.
+        </p>
+
+        <form id="username-form" class="order" autocomplete="off">
+          <label class="order-label" for="username-input">Name for the order</label>
+          <div class="order-line">
+            <span class="order-at" aria-hidden="true">@</span>
+            <input
+              id="username-input"
+              type="text"
+              placeholder="username"
+              required
+              spellcheck="false"
+              autocomplete="off"
+              autocapitalize="off"
+            />
+            <button type="submit" id="generate-btn">
+              <span class="btn-text">Print my card</span>
+              <span class="btn-loader" hidden>
+                <span class="spinner"></span> Printing
+              </span>
+            </button>
+          </div>
         </form>
-        <p id="error-msg" class="error-msg" hidden></p>
+        <p id="error-msg" class="error-msg" role="alert" hidden></p>
 
-        <!-- Actions — appear after card is generated -->
+        <!-- Actions, shown once a card exists -->
         <div id="card-actions" class="card-actions" hidden>
-          <button id="download-btn" class="download-btn">
-            <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M2.75 14A1.75 1.75 0 011 12.25v-2.5a.75.75 0 011.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25v-2.5a.75.75 0 011.5 0v2.5A1.75 1.75 0 0113.25 14H2.75z"/><path d="M7.25 7.689V2a.75.75 0 011.5 0v5.689l1.97-1.969a.749.749 0 111.06 1.06l-3.25 3.25a.749.749 0 01-1.06 0L4.22 6.78a.749.749 0 111.06-1.06l1.97 1.969z"/></svg>
-            Download PNG
-          </button>
-          <button id="linkedin-btn" class="linkedin-btn">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            Share on LinkedIn
-          </button>
+          <button id="download-btn" class="act act-solid">Save as PNG</button>
+          <button id="linkedin-btn" class="act">Share on LinkedIn</button>
         </div>
 
-        <p class="landing-note">
-          Uses public profile data only. Nothing to install, nothing stored on a server.<br />
+        <p class="fine">
+          Reads public profile data only, right in your browser.<br />
           Not affiliated with or endorsed by GitHub, Inc.
-          · <a href="https://isfarbaset.github.io/">isfarbaset.github.io</a>
         </p>
       </div>
-    </aside>
+    </header>
 
-    <!-- ═══ RIGHT PANEL — card area ═══ -->
-    <main class="panel-right">
+    <!-- ═══ Right: the table, where the receipt lands ═══ -->
+    <main class="table">
       <div id="card-placeholder" class="card-placeholder">
-        <div class="ghost-card" aria-hidden="true">
-          <div class="ghost-head"><span class="ghost-avatar"></span><span class="ghost-lines"><span></span><span></span></span></div>
-          <div class="ghost-stats"><span></span><span></span><span></span><span></span></div>
-          <div class="ghost-bars"><span style="width:92%"></span><span style="width:70%"></span><span style="width:54%"></span><span style="width:38%"></span></div>
+        <div class="ghost" aria-hidden="true">
+          <span class="ghost-title"></span>
+          <span class="ghost-line"></span><span class="ghost-line"></span><span class="ghost-line short"></span>
+          <span class="ghost-rule"></span>
+          <span class="ghost-line"></span><span class="ghost-line"></span><span class="ghost-line"></span><span class="ghost-line short"></span>
+          <span class="ghost-rule"></span>
+          <span class="ghost-code"></span>
         </div>
-        <p>Your card will appear here</p>
-        <p class="placeholder-try">Try <button type="button" class="try-user" data-user="torvalds">torvalds</button> or <button type="button" class="try-user" data-user="isfarbaset">isfarbaset</button></p>
+        <p class="hand placeholder-note">your receipt prints here</p>
+        <p class="placeholder-try">
+          or try
+          <button type="button" class="try-user" data-user="torvalds">@torvalds</button>
+          <button type="button" class="try-user" data-user="isfarbaset">@isfarbaset</button>
+        </p>
       </div>
+
       <div id="card-wrapper" class="card-wrapper" hidden>
-        <div id="stats-card" class="stats-card">
-            <div class="card-accent"></div>
+        <span class="tape" aria-hidden="true"></span>
+        <article id="stats-card" class="stats-card">
 
-            <!-- Header -->
-            <div class="card-header">
-              <img id="card-avatar" class="card-avatar" src="" alt="" crossorigin="anonymous" />
-              <div class="card-user-info">
-                <h2 id="card-name" class="card-name"></h2>
-                <p id="card-username" class="card-handle"></p>
-                <p id="card-bio" class="card-bio"></p>
-              </div>
-            </div>
-
-            <!-- Primary stats: Repos, Stars, Followers, Forks -->
-            <div class="card-stats">
-              <div class="card-stat">
-                <span class="stat-value" id="card-repos">0</span>
-                <span class="stat-label">Repositories</span>
-              </div>
-              <div class="card-stat">
-                <span class="stat-value" id="card-stars">0</span>
-                <span class="stat-label">Stars Earned</span>
-              </div>
-              <div class="card-stat">
-                <span class="stat-value" id="card-followers">0</span>
-                <span class="stat-label">Followers</span>
-              </div>
-              <div class="card-stat">
-                <span class="stat-value" id="card-forks">0</span>
-                <span class="stat-label">Forks Earned</span>
-              </div>
-            </div>
-
-            <!-- Streaks -->
-            <div class="card-streak-row">
-              <div class="streak-item">
-                <span class="streak-icon">🔥</span>
-                <div class="streak-text">
-                  <span class="streak-value" id="card-longest-streak">0</span>
-                  <span class="streak-label">Longest Streak</span>
-                </div>
-              </div>
-              <div class="streak-item">
-                <span class="streak-icon">⚡</span>
-                <div class="streak-text">
-                  <span class="streak-value" id="card-current-streak">0</span>
-                  <span class="streak-label">Current Streak</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Highlights -->
-            <div class="card-section" id="card-fun-facts-section">
-              <h3 class="card-section-title">Highlights</h3>
-              <div id="card-fun-facts" class="fun-facts"></div>
-            </div>
-
-            <!-- Personality + Peak Time -->
-            <div class="card-personality-row">
-              <div class="personality-chip">
-                <span class="chip-emoji" id="personality-emoji">🚀</span>
-                <div class="chip-text">
-                  <span class="chip-title" id="personality-title">—</span>
-                  <span class="chip-sub" id="personality-sub"></span>
-                </div>
-              </div>
-              <div class="personality-chip time-chip">
-                <span class="chip-emoji" id="peak-emoji">🌙</span>
-                <div class="chip-text">
-                  <span class="chip-title" id="peak-title">—</span>
-                  <span class="chip-sub" id="peak-sub"></span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Most active repo -->
-            <div class="card-top-repo" id="card-top-repo">
-              <span class="top-repo-trophy">🏆</span>
-              <div class="top-repo-info">
-                <span class="top-repo-label">Most Active Repo</span>
-                <span class="top-repo-name" id="top-repo-name">—</span>
-              </div>
-              <span class="top-repo-commits" id="top-repo-commits"></span>
-            </div>
-
-            <!-- Top 5 repos bar chart -->
-            <div class="card-section" id="card-top-repos-section">
-              <h3 class="card-section-title">Top Repositories</h3>
-              <div id="card-repo-bars" class="repo-bars"></div>
-            </div>
-
-            <!-- Monthly contributions chart -->
-            <div class="card-section" id="card-monthly-section">
-              <h3 class="card-section-title">Monthly Activity <span class="section-note">(recent)</span></h3>
-              <div id="card-monthly-chart" class="monthly-chart"></div>
-              <p id="card-peak-month" class="peak-month-label"></p>
-            </div>
-
-            <!-- Day-of-week heatmap -->
-            <div class="card-section" id="card-daily-section">
-              <h3 class="card-section-title">Day of Week <span class="section-note">(recent)</span></h3>
-              <div id="card-day-heatmap" class="day-heatmap"></div>
-              <p id="card-peak-day" class="peak-day-label"></p>
-            </div>
-
-            <!-- Hourly Activity Heatmap -->
-            <div class="card-section" id="card-hourly-section">
-              <h3 class="card-section-title">Time of Day <span class="section-note">(recent)</span></h3>
-              <div id="card-hourly-heatmap" class="hourly-heatmap"></div>
-              <p id="card-peak-hour" class="peak-hour-label"></p>
-            </div>
-
-            <!-- Languages -->
-            <div class="card-section">
-              <h3 class="card-section-title">Top Languages</h3>
-              <div id="card-lang-bar" class="lang-bar"></div>
-              <div id="card-lang-legend" class="lang-legend"></div>
-            </div>
-
-            <!-- Lifetime Activity -->
-            <div class="card-section">
-              <h3 class="card-section-title">Activity</h3>
-              <div class="card-activity-grid">
-                <div class="activity-stat">
-                  <span class="activity-value" id="card-total-contributions">0</span>
-                  <span class="activity-label">Contributions</span>
-                </div>
-                <div class="activity-stat">
-                  <span class="activity-value" id="card-prs">0</span>
-                  <span class="activity-label">Pull Requests</span>
-                </div>
-                <div class="activity-stat">
-                  <span class="activity-value" id="card-issues">0</span>
-                  <span class="activity-label">Issues</span>
-                </div>
-              </div>
-              <div class="card-activity-grid card-activity-grid-secondary">
-                <div class="activity-stat">
-                  <span class="activity-value accent-purple" id="card-prs-merged">0</span>
-                  <span class="activity-label">PRs Merged</span>
-                </div>
-                <div class="activity-stat">
-                  <span class="activity-value accent-blue" id="card-issues-closed">0</span>
-                  <span class="activity-label">Issues Closed</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Details -->
-            <div class="card-details">
-              <div class="detail-item" id="detail-company">
-                <svg viewBox="0 0 16 16" width="14" height="14"><path fill="currentColor" d="M1.5 14.25c0 .138.112.25.25.25H4v-2.75a.75.75 0 01.75-.75h2.5a.75.75 0 01.75.75v2.75h2.25a.25.25 0 00.25-.25V1.75a.25.25 0 00-.25-.25h-8.5a.25.25 0 00-.25.25v12.5zM1.75 0A1.75 1.75 0 000 1.75v12.5C0 15.216.784 16 1.75 16h12.5A1.75 1.75 0 0016 14.25v-8.5A1.75 1.75 0 0014.25 4H11V1.75A1.75 1.75 0 009.25 0H1.75zM11 5.5h3.25a.25.25 0 01.25.25v8.5a.25.25 0 01-.25.25H11V5.5z"/></svg>
-                <span id="detail-company-text"></span>
-              </div>
-              <div class="detail-item" id="detail-location">
-                <svg viewBox="0 0 16 16" width="14" height="14"><path fill="currentColor" d="M11.536 3.464a5 5 0 010 7.072L8 14.07l-3.536-3.535a5 5 0 117.072-7.072v.001zm1.06 8.132a6.5 6.5 0 10-9.192 0l3.535 3.536a1.5 1.5 0 002.122 0l3.535-3.536zM8 9a2 2 0 100-4 2 2 0 000 4z"/></svg>
-                <span id="detail-location-text"></span>
-              </div>
-              <div class="detail-item" id="detail-joined">
-                <svg viewBox="0 0 16 16" width="14" height="14"><path fill="currentColor" d="M4.75 0a.75.75 0 01.75.75V2h5V.75a.75.75 0 011.5 0V2h1.25c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0113.25 16H2.75A1.75 1.75 0 011 14.25V3.75C1 2.784 1.784 2 2.75 2H4V.75A.75.75 0 014.75 0zm0 3.5H2.75a.25.25 0 00-.25.25V6h11V3.75a.25.25 0 00-.25-.25H11.5v.75a.75.75 0 01-1.5 0V3.5h-5v.75a.75.75 0 01-1.5 0V3.5zm-2.5 4v6.75c0 .138.112.25.25.25h10.5a.25.25 0 00.25-.25V7.5h-11z"/></svg>
-                <span id="detail-joined-text"></span>
-              </div>
-            </div>
-
-            <div class="card-watermark">Commit Card · by Isfar Baset</div>
+          <!-- Header -->
+          <div class="r-top">
+            <p class="r-shop">Commit Card</p>
+            <p class="r-meta" id="card-printed"></p>
           </div>
-        </div>
-      </main>
+
+          <div class="card-header">
+            <img id="card-avatar" class="card-avatar" src="" alt="" crossorigin="anonymous" />
+            <div class="card-user-info">
+              <p class="r-label">Order for</p>
+              <h2 id="card-name" class="card-name"></h2>
+              <p id="card-username" class="card-handle"></p>
+              <p id="card-bio" class="card-bio"></p>
+            </div>
+          </div>
+
+          <!-- Primary stats -->
+          <div class="card-stats">
+            <div class="card-stat"><span class="stat-label">Repositories</span><span class="dots"></span><span class="stat-value" id="card-repos">0</span></div>
+            <div class="card-stat"><span class="stat-label">Stars earned</span><span class="dots"></span><span class="stat-value" id="card-stars">0</span></div>
+            <div class="card-stat"><span class="stat-label">Followers</span><span class="dots"></span><span class="stat-value" id="card-followers">0</span></div>
+            <div class="card-stat"><span class="stat-label">Forks earned</span><span class="dots"></span><span class="stat-value" id="card-forks">0</span></div>
+            <div class="card-stat"><span class="stat-label">Longest streak</span><span class="dots"></span><span class="stat-value" id="card-longest-streak">0</span></div>
+            <div class="card-stat"><span class="stat-label">Current streak</span><span class="dots"></span><span class="stat-value" id="card-current-streak">0</span></div>
+          </div>
+
+          <!-- Personality + peak time -->
+          <div class="card-personality-row">
+            <div class="personality-chip">
+              <span class="chip-emoji" id="personality-emoji" hidden></span>
+              <p class="r-label">House specialty</p>
+              <p class="chip-title"><span class="hl" id="personality-title">—</span></p>
+              <p class="chip-sub" id="personality-sub"></p>
+            </div>
+            <div class="personality-chip time-chip">
+              <span class="chip-emoji" id="peak-emoji" hidden></span>
+              <p class="r-label">Usual hour</p>
+              <p class="chip-title"><span class="hl" id="peak-title">—</span></p>
+              <p class="chip-sub" id="peak-sub"></p>
+            </div>
+          </div>
+
+          <!-- Highlights -->
+          <div class="card-section" id="card-fun-facts-section">
+            <h3 class="card-section-title">Highlights</h3>
+            <div id="card-fun-facts" class="fun-facts"></div>
+          </div>
+
+          <!-- Most active repo -->
+          <div class="card-section card-top-repo" id="card-top-repo">
+            <h3 class="card-section-title">Most ordered</h3>
+            <p class="top-repo-line"><span class="top-repo-name" id="top-repo-name">—</span><span class="dots"></span><span class="top-repo-commits" id="top-repo-commits"></span></p>
+          </div>
+
+          <!-- Top repos -->
+          <div class="card-section" id="card-top-repos-section">
+            <h3 class="card-section-title">Top repositories</h3>
+            <div id="card-repo-bars" class="repo-bars"></div>
+          </div>
+
+          <!-- Monthly -->
+          <div class="card-section" id="card-monthly-section">
+            <h3 class="card-section-title">By month <span class="section-note">recent</span></h3>
+            <div id="card-monthly-chart" class="monthly-chart"></div>
+            <p id="card-peak-month" class="peak-label"></p>
+          </div>
+
+          <!-- Day of week -->
+          <div class="card-section" id="card-daily-section">
+            <h3 class="card-section-title">By weekday <span class="section-note">recent</span></h3>
+            <div id="card-day-heatmap" class="day-heatmap"></div>
+            <p id="card-peak-day" class="peak-label"></p>
+          </div>
+
+          <!-- Time of day -->
+          <div class="card-section" id="card-hourly-section">
+            <h3 class="card-section-title">By time of day <span class="section-note">recent</span></h3>
+            <div id="card-hourly-heatmap" class="hourly-heatmap"></div>
+            <p id="card-peak-hour" class="peak-label"></p>
+          </div>
+
+          <!-- Languages -->
+          <div class="card-section">
+            <h3 class="card-section-title">Languages</h3>
+            <div id="card-lang-bar" class="lang-bar"></div>
+            <div id="card-lang-legend" class="lang-legend"></div>
+          </div>
+
+          <!-- Totals -->
+          <div class="card-section r-totals">
+            <h3 class="card-section-title">Lifetime totals</h3>
+            <div class="card-activity-grid">
+              <div class="activity-stat"><span class="activity-label">Contributions</span><span class="dots"></span><span class="activity-value" id="card-total-contributions">0</span></div>
+              <div class="activity-stat"><span class="activity-label">Pull requests</span><span class="dots"></span><span class="activity-value" id="card-prs">0</span></div>
+              <div class="activity-stat"><span class="activity-label">Issues opened</span><span class="dots"></span><span class="activity-value" id="card-issues">0</span></div>
+              <div class="activity-stat"><span class="activity-label">PRs merged</span><span class="dots"></span><span class="activity-value" id="card-prs-merged">0</span></div>
+              <div class="activity-stat"><span class="activity-label">Issues closed</span><span class="dots"></span><span class="activity-value" id="card-issues-closed">0</span></div>
+            </div>
+          </div>
+
+          <!-- Details -->
+          <div class="card-details">
+            <span class="detail-item" id="detail-company"><span id="detail-company-text"></span></span>
+            <span class="detail-item" id="detail-location"><span id="detail-location-text"></span></span>
+            <span class="detail-item" id="detail-joined"><span id="detail-joined-text"></span></span>
+          </div>
+
+          <div id="card-barcode" class="barcode" aria-hidden="true"></div>
+          <p class="r-thanks">thank you, come again</p>
+          <div class="card-watermark">Commit Card · isfarbaset.github.io</div>
+        </article>
+      </div>
+    </main>
 
   </div>
 

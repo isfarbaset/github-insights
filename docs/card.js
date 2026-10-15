@@ -7,18 +7,9 @@
 
 const API = "https://api.github.com";
 
-const LANG_COLORS = {
-  JavaScript: "#f1e05a", TypeScript: "#3178c6", Python: "#3572A5",
-  Java: "#b07219", "C++": "#f34b7d", C: "#555555",
-  "C#": "#178600", Go: "#00ADD8", Rust: "#dea584",
-  Ruby: "#701516", PHP: "#4F5D95", Swift: "#ffac45",
-  Kotlin: "#A97BFF", HTML: "#e34c26", CSS: "#563d7c",
-  Shell: "#89e051", Vue: "#41b883", Dart: "#00B4AB",
-  Lua: "#000080", Scala: "#c22d40", R: "#198CE7",
-  Perl: "#0298c3", Haskell: "#5e5086", Elixir: "#6e4a7e",
-  Clojure: "#db5855", "Objective-C": "#438eff", SCSS: "#c6538c",
-  "Jupyter Notebook": "#DA5B0B",
-};
+// Our own pastel-and-ink palette, handed out in rank order (not GitHub's
+// language colors, so the card never borrows GitHub's look)
+const LANG_PALETTE = ["#231d19", "#8b3a2b", "#2d3c68", "#f2d58a", "#efb0bd", "#a9cbe8", "#b3dcc2", "#f3bf98"];
 
 const $ = (s) => document.querySelector(s);
 
@@ -432,20 +423,20 @@ function getPersonality(stats, langCount) {
   const contribs = stats.totalContributions || 0;
 
   if (commits > 500)
-    return { emoji: "🚀", title: "CODE MACHINE", sub: "Ships code like there's no tomorrow" };
+    return { emoji: "🚀", title: "Code machine", sub: "Ships like the kitchen's about to close" };
   if (prs > 50)
-    return { emoji: "🤝", title: "COLLABORATION KING", sub: "All about teamwork and code reviews" };
+    return { emoji: "🤝", title: "The collaborator", sub: "All about teamwork and code reviews" };
   if (issues > 30)
-    return { emoji: "🐛", title: "BUG HUNTER", sub: "No bug is safe when you're around" };
+    return { emoji: "🐛", title: "Bug hunter", sub: "No bug is safe when you're around" };
   if (stats.longestStreak > 30)
-    return { emoji: "🔥", title: "STREAK MASTER", sub: "Consistency is your middle name" };
+    return { emoji: "🔥", title: "Streak keeper", sub: "Consistency is your middle name" };
   if (langCount > 5)
-    return { emoji: "🎨", title: "POLYGLOT DEV", sub: "Speaks many programming languages" };
+    return { emoji: "🎨", title: "Polyglot", sub: "Speaks many programming languages" };
   if (stars > 100)
-    return { emoji: "⭐", title: "STAR COLLECTOR", sub: "Your repos shine bright like diamonds" };
+    return { emoji: "⭐", title: "Star collector", sub: "People keep coming back for seconds" };
   if (contribs > 200)
-    return { emoji: "💪", title: "DEDICATED DEV", sub: "Puts in the work, day after day" };
-  return { emoji: "🌱", title: "GROWING DEV", sub: "Every commit is a step forward" };
+    return { emoji: "💪", title: "Steady hands", sub: "Puts in the work, day after day" };
+  return { emoji: "🌱", title: "Just getting going", sub: "Every commit is a step forward" };
 }
 
 /* ── Peak coding time (same buckets as original) ──────── */
@@ -461,10 +452,10 @@ function getPeakTime(hourly) {
   }
   const peak = Object.entries(buckets).sort((a, b) => b[1] - a[1])[0][0];
   const map = {
-    Night:     { emoji: "🦉", title: "NIGHT OWL",         sub: "The moon is your coding companion" },
-    Morning:   { emoji: "🌅", title: "EARLY BIRD",        sub: "First commits before first coffee" },
-    Afternoon: { emoji: "☀️",  title: "AFTERNOON WARRIOR", sub: "Peak productivity hours" },
-    Evening:   { emoji: "🌆", title: "EVENING CODER",     sub: "Golden hour, golden commits" },
+    Night:     { emoji: "🦉", title: "Night owl",         sub: "The moon is your coding companion" },
+    Morning:   { emoji: "🌅", title: "Early bird",        sub: "First commits before first coffee" },
+    Afternoon: { emoji: "☀️",  title: "Afternoon regular", sub: "Does the real work between lunch and five" },
+    Evening:   { emoji: "🌆", title: "Evening shift",     sub: "Golden hour, golden commits" },
   };
   return map[peak] || map.Night;
 }
@@ -481,10 +472,10 @@ function computeLanguages(repos) {
   return Object.entries(map)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 8)
-    .map(([name, val]) => ({
+    .map(([name, val], i) => ({
       name,
       pct: ((val / total) * 100).toFixed(1),
-      color: LANG_COLORS[name] || "#9a92ab",
+      color: LANG_PALETTE[i % LANG_PALETTE.length],
     }));
 }
 
@@ -561,13 +552,13 @@ function renderCard(user, repos, stats) {
   if (top5.length > 1) {
     repoBarSection.style.display = "";
     const maxC = top5[0][1] || 1;
-    const rankColors = ["#ffd700", "#c0c0c0", "#cd7f32", "var(--accent)", "var(--teal)"];
+    const rankColors = ["#f3bf98", "#f2d58a", "#efb0bd", "#a9cbe8", "#b3dcc2"];
     top5.forEach(([name, commits], i) => {
       const pct = Math.max((commits / maxC) * 100, 8);
-      const color = rankColors[i] || "var(--text-muted)";
+      const color = rankColors[i] || "#d9cfc0";
       repoBarsEl.innerHTML += `
         <div class="repo-bar-row">
-          <span class="repo-bar-rank" style="background:${color};color:${i < 3 ? '#000' : '#fff'}">${i + 1}</span>
+          <span class="repo-bar-rank">${i + 1}</span>
           <div class="repo-bar-info">
             <span class="repo-bar-name">${name}</span>
             <div class="repo-bar-track">
@@ -689,7 +680,7 @@ function renderCard(user, repos, stats) {
   legendEl.innerHTML = "";
   if (!langs.length) {
     barEl.style.display = "none";
-    legendEl.innerHTML = '<span class="lang-legend-item" style="color:var(--text-muted)">No language data</span>';
+    legendEl.innerHTML = '<span class="lang-legend-item" style="color:var(--soft)">No language data</span>';
   } else {
     barEl.style.display = "";
     for (const l of langs) {
@@ -712,40 +703,40 @@ function renderCard(user, repos, stats) {
   // Account age
   if (user.created_at) {
     const years = ((Date.now() - new Date(user.created_at)) / (365.25 * 24 * 60 * 60 * 1000));
-    if (years >= 1) facts.push(`📅 <b>${Math.floor(years)}</b> year${Math.floor(years) !== 1 ? 's' : ''} on GitHub`);
-    else facts.push(`📅 Joined GitHub <b>${Math.ceil(years * 12)}</b> month${Math.ceil(years * 12) !== 1 ? 's' : ''} ago`);
+    if (years >= 1) facts.push(`<b>${Math.floor(years)}</b> year${Math.floor(years) !== 1 ? 's' : ''} on GitHub`);
+    else facts.push(`Joined GitHub <b>${Math.ceil(years * 12)}</b> month${Math.ceil(years * 12) !== 1 ? 's' : ''} ago`);
   }
 
   // Contributions total
   const contribTotal = stats.lifetimeContributions || stats.totalContributions;
   if (contribTotal && contribTotal > 0) {
-    facts.push(`📊 <b>${contribTotal.toLocaleString()}</b> lifetime contributions`);
+    facts.push(`<b>${contribTotal.toLocaleString()}</b> lifetime contributions`);
   }
 
   // Stars
   if (stats.starsReceived !== null && stats.starsReceived > 0) {
-    facts.push(`⭐ Collected <b>${stats.starsReceived.toLocaleString()}</b> star${stats.starsReceived !== 1 ? 's' : ''}`);
+    facts.push(`Collected <b>${stats.starsReceived.toLocaleString()}</b> star${stats.starsReceived !== 1 ? 's' : ''}`);
   }
 
   // Forks
   if (stats.forksReceived !== null && stats.forksReceived > 0) {
-    facts.push(`🍴 Repos forked <b>${stats.forksReceived.toLocaleString()}</b> time${stats.forksReceived !== 1 ? 's' : ''}`);
+    facts.push(`Repos forked <b>${stats.forksReceived.toLocaleString()}</b> time${stats.forksReceived !== 1 ? 's' : ''}`);
   }
 
   // Longest streak
   if (stats.longestStreak > 0) {
-    facts.push(`🔥 Longest streak: <b>${stats.longestStreak}</b> day${stats.longestStreak !== 1 ? 's' : ''}`);
+    facts.push(`Longest streak: <b>${stats.longestStreak}</b> day${stats.longestStreak !== 1 ? 's' : ''}`);
   }
 
   // Languages count
   if (langs.length > 0) {
-    facts.push(`🗂️ Codes in <b>${langs.length}</b> language${langs.length !== 1 ? 's' : ''}`);
+    facts.push(`Codes in <b>${langs.length}</b> language${langs.length !== 1 ? 's' : ''}`);
   }
 
   if (facts.length) {
     funEl.innerHTML = facts.map(f => `<div class="ff-row">${f}</div>`).join('');
   } else {
-    funEl.innerHTML = '<div class="ff-row" style="color:var(--text-muted)">Not enough data for fun facts</div>';
+    funEl.innerHTML = '<div class="ff-row" style="color:var(--soft)">Not enough data for fun facts</div>';
   }
 
   // ── Details ──
@@ -756,9 +747,26 @@ function renderCard(user, repos, stats) {
   };
   setDetail("detail-company", user.company);
   setDetail("detail-location", user.location);
+  // Receipt header line and a barcode drawn from the username
+  $("#card-printed").textContent = `Printed ${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })} · No. ${String(user.id || 0).slice(-6).padStart(6, "0")}`;
+  drawBarcode(user.login);
+
   setDetail("detail-joined", user.created_at
     ? `Joined ${new Date(user.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" })}`
     : null);
+}
+
+/* ── Barcode (decorative, seeded by the username) ──────── */
+
+function drawBarcode(seed) {
+  const el = $("#card-barcode");
+  let h = 2166136261;
+  const bars = [];
+  for (let i = 0; i < 46; i++) {
+    h = Math.imul(h ^ seed.charCodeAt(i % seed.length), 16777619) >>> 0;
+    bars.push(`<i style="width:${1 + (h % 3)}px;margin-right:${1 + ((h >> 3) % 3)}px"></i>`);
+  }
+  el.innerHTML = bars.join("");
 }
 
 /* ── Download PNG ──────────────────────────────────────── */
@@ -766,7 +774,7 @@ function renderCard(user, repos, stats) {
 async function downloadCard(username) {
   const card = $("#stats-card");
   const canvas = await html2canvas(card, {
-    backgroundColor: "#13111c",
+    backgroundColor: "#fbf8f2",
     scale: 2,
     useCORS: true,
     logging: false,
@@ -793,7 +801,7 @@ form.addEventListener("submit", async (e) => {
       placeholder.hidden = true;
       cardWrapper.hidden = false;
       cardActions.hidden = false;
-      showToast("⚡ Loaded from cache (refreshes every hour)");
+      showToast("Reprinted from earlier (refreshes every hour)");
       return;
     }
 
@@ -820,7 +828,7 @@ form.addEventListener("submit", async (e) => {
       placeholder.hidden = true;
       cardWrapper.hidden = false;
       cardActions.hidden = false;
-      showToast("⚠️ Rate limited — showing partial data. Try again in an hour for full stats.");
+      showToast("GitHub's hourly limit was reached, so this receipt is partial. Try again in an hour.");
       return;
     }
 
@@ -847,7 +855,7 @@ form.addEventListener("submit", async (e) => {
     cardActions.hidden = false;
 
     if (stats._partial) {
-      showToast("⚠️ Some data unavailable due to rate limits. Try again in an hour for full stats.");
+      showToast("A few lines are missing because of GitHub's hourly limit. Try again in an hour.");
     }
   } catch (err) {
     showError(err.message || "Something went wrong. Please try again.");
@@ -860,7 +868,7 @@ form.addEventListener("submit", async (e) => {
 async function getCardBlob() {
   const card = $("#stats-card");
   const canvas = await html2canvas(card, {
-    backgroundColor: "#13111c",
+    backgroundColor: "#fbf8f2",
     scale: 2,
     useCORS: true,
     logging: false,
@@ -878,7 +886,7 @@ $("#linkedin-btn").addEventListener("click", async () => {
   const blob = await getCardBlob();
   const file = new File([blob], `${username}-commit-card.png`, { type: "image/png" });
 
-  const postText = `Check out my GitHub stats card! 🚀\n\nMade with Commit Card, a side project by Isfar Baset: streaks, top languages & more at a glance.\n\nhttps://isfarbaset.github.io/github-insights/\n\n🔗 https://github.com/${username}\n\n#GitHub #Developer #OpenSource`;
+  const postText = `My year of code, printed as a receipt.\n\nMade with Commit Card, a side project by Isfar Baset: streaks, top languages & more at a glance.\n\nhttps://isfarbaset.github.io/github-insights/\n\n🔗 https://github.com/${username}\n\n#GitHub #Developer #OpenSource`;
 
   // Try the Web Share API (supports file attachments on mobile & some desktop)
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -902,7 +910,7 @@ $("#linkedin-btn").addEventListener("click", async () => {
       "noopener,noreferrer,width=700,height=700"
     );
     // Show a brief toast telling user to paste
-    showToast("📋 Card copied to clipboard — paste it into your LinkedIn post!");
+    showToast("Card copied. Paste it into your LinkedIn post.");
   } catch {
     // Last resort: just download + open LinkedIn
     await downloadCard(username);
@@ -911,7 +919,7 @@ $("#linkedin-btn").addEventListener("click", async () => {
       "_blank",
       "noopener,noreferrer,width=700,height=700"
     );
-    showToast("Card downloaded — attach it to your LinkedIn post!");
+    showToast("Card saved. Attach it to your LinkedIn post.");
   }
 });
 
