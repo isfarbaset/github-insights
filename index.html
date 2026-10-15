@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GitHub Insights — Generate Your Stats Card</title>
-  <meta name="description" content="Plug in any GitHub username and instantly generate a beautiful stats card with lifetime commits, streaks, top languages, and more. Download or share it anywhere." />
+  <title>Commit Card — a stats card for any public GitHub profile</title>
+  <meta name="description" content="Commit Card, a side project by Isfar Baset: type a public GitHub username and get a shareable stats card with streaks, top languages and more. Not affiliated with GitHub." />
 
   <!-- Open Graph (LinkedIn, Facebook, iMessage, Slack, etc.) -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="GitHub Insights — Generate Your Stats Card" />
-  <meta property="og:description" content="Plug in any GitHub username and instantly generate a beautiful stats card with lifetime commits, streaks, top languages, and more." />
+  <meta property="og:title" content="Commit Card by Isfar Baset" />
+  <meta property="og:description" content="A side project by Isfar Baset: turn any public GitHub profile into a shareable stats card. Not affiliated with GitHub." />
   <meta property="og:image" content="https://isfarbaset.github.io/github-insights/preview.png" />
   <meta property="og:url" content="https://isfarbaset.github.io/github-insights" />
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="GitHub Insights — Generate Your Stats Card" />
-  <meta name="twitter:description" content="Plug in any GitHub username and instantly generate a beautiful stats card with lifetime commits, streaks, top languages, and more." />
+  <meta name="twitter:title" content="Commit Card by Isfar Baset" />
+  <meta name="twitter:description" content="A side project by Isfar Baset: turn any public GitHub profile into a shareable stats card. Not affiliated with GitHub." />
   <meta name="twitter:image" content="https://isfarbaset.github.io/github-insights/preview.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,26 +31,29 @@
     <aside class="panel-left">
       <div class="panel-left-inner">
         <div class="landing-glow"></div>
-        <div class="logo-mark">
-          <svg viewBox="0 0 16 16" width="48" height="48" fill="#c9d1d9">
-            <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-          </svg>
+        <div class="logo-mark" aria-hidden="true">
+          <span class="logo-card logo-card-back"></span>
+          <span class="logo-card logo-card-front">
+            <span class="logo-bar"></span><span class="logo-bar"></span><span class="logo-bar"></span>
+          </span>
         </div>
-        <h1 class="landing-title">GITHUB INSIGHTS</h1>
-        <p class="landing-sub">Generate your own GitHub stats card to showcase anywhere</p>
+        <p class="landing-kicker">A side project by Isfar Baset</p>
+        <h1 class="landing-title">Commit Card</h1>
+        <p class="landing-sub">Type any public GitHub username and get a shareable card of streaks, top repos and languages.</p>
 
         <form id="username-form" class="input-group" autocomplete="off">
           <span class="input-at">@</span>
           <input
             id="username-input"
             type="text"
-            placeholder="Enter GitHub username"
+            placeholder="username"
+            aria-label="GitHub username"
             required
             spellcheck="false"
             autocomplete="off"
           />
           <button type="submit" id="generate-btn">
-            <span class="btn-text">Generate</span>
+            <span class="btn-text">Make card</span>
             <span class="btn-loader" hidden>
               <span class="spinner"></span>
             </span>
@@ -69,16 +72,25 @@
             Share on LinkedIn
           </button>
         </div>
+
+        <p class="landing-note">
+          Uses public profile data only. Nothing to install, nothing stored on a server.<br />
+          Not affiliated with or endorsed by GitHub, Inc.
+          · <a href="https://isfarbaset.github.io/">isfarbaset.github.io</a>
+        </p>
       </div>
     </aside>
 
     <!-- ═══ RIGHT PANEL — card area ═══ -->
     <main class="panel-right">
       <div id="card-placeholder" class="card-placeholder">
-        <svg viewBox="0 0 16 16" width="64" height="64" fill="var(--gh-border)">
-          <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-        </svg>
-        <p>Your stats card will appear here</p>
+        <div class="ghost-card" aria-hidden="true">
+          <div class="ghost-head"><span class="ghost-avatar"></span><span class="ghost-lines"><span></span><span></span></span></div>
+          <div class="ghost-stats"><span></span><span></span><span></span><span></span></div>
+          <div class="ghost-bars"><span style="width:92%"></span><span style="width:70%"></span><span style="width:54%"></span><span style="width:38%"></span></div>
+        </div>
+        <p>Your card will appear here</p>
+        <p class="placeholder-try">Try <button type="button" class="try-user" data-user="torvalds">torvalds</button> or <button type="button" class="try-user" data-user="isfarbaset">isfarbaset</button></p>
       </div>
       <div id="card-wrapper" class="card-wrapper" hidden>
         <div id="stats-card" class="stats-card">
@@ -245,7 +257,7 @@
               </div>
             </div>
 
-            <div class="card-watermark">github-insights</div>
+            <div class="card-watermark">Commit Card · by Isfar Baset</div>
           </div>
         </div>
       </main>

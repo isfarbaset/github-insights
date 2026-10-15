@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════
-   GitHub Insights — Full Stats Card Generator
+   Commit Card — stats card generator (a side project, not affiliated with GitHub)
    Uses the public GitHub REST, Search & Contributors APIs
-   (no sign-in needed) for lifetime stats.
+   (public data only) for lifetime stats.
    Events API used for activity-pattern visualizations.
    ═══════════════════════════════════════════════════════════ */
 
@@ -35,12 +35,12 @@ const cardWrapper = $("#card-wrapper");
 
 /* ── Requests ──────────────────────────────────────────── */
 
-// Every call is unauthenticated: this page never asks for a GitHub token.
+// Every call is anonymous: this page never asks visitors for any credential.
 function getHeaders() {
   return { Accept: "application/vnd.github.v3+json" };
 }
 
-// Forget any token an earlier version of this page saved in the browser
+// Clear a value an earlier version of this page saved in the browser
 localStorage.removeItem("gh_token");
 
 /* ── Caching (localStorage, 1-hour TTL) ────────────────── */
@@ -484,7 +484,7 @@ function computeLanguages(repos) {
     .map(([name, val]) => ({
       name,
       pct: ((val / total) * 100).toFixed(1),
-      color: LANG_COLORS[name] || "#8b949e",
+      color: LANG_COLORS[name] || "#9a92ab",
     }));
 }
 
@@ -561,10 +561,10 @@ function renderCard(user, repos, stats) {
   if (top5.length > 1) {
     repoBarSection.style.display = "";
     const maxC = top5[0][1] || 1;
-    const rankColors = ["#ffd700", "#c0c0c0", "#cd7f32", "var(--gh-green)", "var(--gh-blue)"];
+    const rankColors = ["#ffd700", "#c0c0c0", "#cd7f32", "var(--accent)", "var(--teal)"];
     top5.forEach(([name, commits], i) => {
       const pct = Math.max((commits / maxC) * 100, 8);
-      const color = rankColors[i] || "var(--gh-text-muted)";
+      const color = rankColors[i] || "var(--text-muted)";
       repoBarsEl.innerHTML += `
         <div class="repo-bar-row">
           <span class="repo-bar-rank" style="background:${color};color:${i < 3 ? '#000' : '#fff'}">${i + 1}</span>
@@ -689,7 +689,7 @@ function renderCard(user, repos, stats) {
   legendEl.innerHTML = "";
   if (!langs.length) {
     barEl.style.display = "none";
-    legendEl.innerHTML = '<span class="lang-legend-item" style="color:var(--gh-text-muted)">No language data</span>';
+    legendEl.innerHTML = '<span class="lang-legend-item" style="color:var(--text-muted)">No language data</span>';
   } else {
     barEl.style.display = "";
     for (const l of langs) {
@@ -745,7 +745,7 @@ function renderCard(user, repos, stats) {
   if (facts.length) {
     funEl.innerHTML = facts.map(f => `<div class="ff-row">${f}</div>`).join('');
   } else {
-    funEl.innerHTML = '<div class="ff-row" style="color:var(--gh-text-muted)">Not enough data for fun facts</div>';
+    funEl.innerHTML = '<div class="ff-row" style="color:var(--text-muted)">Not enough data for fun facts</div>';
   }
 
   // ── Details ──
@@ -766,13 +766,13 @@ function renderCard(user, repos, stats) {
 async function downloadCard(username) {
   const card = $("#stats-card");
   const canvas = await html2canvas(card, {
-    backgroundColor: "#0d1117",
+    backgroundColor: "#13111c",
     scale: 2,
     useCORS: true,
     logging: false,
   });
   const link = document.createElement("a");
-  link.download = `${username}-github-card.png`;
+  link.download = `${username}-commit-card.png`;
   link.href = canvas.toDataURL("image/png");
   link.click();
 }
@@ -860,7 +860,7 @@ form.addEventListener("submit", async (e) => {
 async function getCardBlob() {
   const card = $("#stats-card");
   const canvas = await html2canvas(card, {
-    backgroundColor: "#0d1117",
+    backgroundColor: "#13111c",
     scale: 2,
     useCORS: true,
     logging: false,
@@ -876,9 +876,9 @@ downloadBtn.addEventListener("click", () => {
 $("#linkedin-btn").addEventListener("click", async () => {
   const username = $("#card-username").textContent.replace("@", "");
   const blob = await getCardBlob();
-  const file = new File([blob], `${username}-github-card.png`, { type: "image/png" });
+  const file = new File([blob], `${username}-commit-card.png`, { type: "image/png" });
 
-  const postText = `Check out my GitHub stats card! 🚀\n\nGenerated with GitHub Insights — see your lifetime commits, streaks, top languages & more at a glance.\n\n🔗 https://github.com/${username}\n\n#GitHub #Developer #OpenSource #GitHubInsights`;
+  const postText = `Check out my GitHub stats card! 🚀\n\nMade with Commit Card, a side project by Isfar Baset: streaks, top languages & more at a glance.\n\nhttps://isfarbaset.github.io/github-insights/\n\n🔗 https://github.com/${username}\n\n#GitHub #Developer #OpenSource`;
 
   // Try the Web Share API (supports file attachments on mobile & some desktop)
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -917,4 +917,13 @@ $("#linkedin-btn").addEventListener("click", async () => {
 
 input.addEventListener("keydown", (e) => {
   if (e.key === "Enter") form.requestSubmit();
+});
+
+/* ── Example usernames in the empty state ──────────────── */
+
+document.querySelectorAll(".try-user").forEach(btn => {
+  btn.addEventListener("click", () => {
+    input.value = btn.dataset.user;
+    form.requestSubmit();
+  });
 });

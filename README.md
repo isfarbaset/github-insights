@@ -1,6 +1,8 @@
-# GitHub Insights
+# Commit Card
 
-Generate your own GitHub stats card. Enter a username, get a downloadable PNG you can share on LinkedIn, add to your portfolio, or post anywhere.
+A side project by Isfar Baset. Type any public GitHub username and get a downloadable stats card you can share on LinkedIn, add to your portfolio, or post anywhere.
+
+Not affiliated with or endorsed by GitHub, Inc. The page uses no GitHub logos or brand colors on purpose, so it can't be mistaken for a GitHub page.
 
 **Live:** [isfarbaset.github.io/github-insights](https://isfarbaset.github.io/github-insights/)
 
@@ -20,7 +22,7 @@ Generate your own GitHub stats card. Enter a username, get a downloadable PNG yo
 
 ## Rate Limits
 
-The page talks to GitHub's public API without signing in, which allows 60 requests per hour per visitor. If you hit the limit, the card shows what it can and the rest comes back within the hour. The page never asks for a GitHub token or any other credential.
+The page talks to GitHub's public API anonymously, which allows 60 requests per hour per visitor. If you hit the limit, the card shows what it can and the rest comes back within the hour. The page never asks for a credential of any kind.
 
 ## Run Locally
 
